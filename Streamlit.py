@@ -21,9 +21,9 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. This is an *extremely* cool app!"
+        'Get Help': 'https://www.nickmackowsk.com',
+        'Report a bug': 'https://www.nickmackowsk.com',
+        'About': "This was created by Nick. Contact him at NickMackowski.com"
     }
 )
 
@@ -70,7 +70,10 @@ with st.form("form_variables"):
                 key = "business_term",
                 placeholder = "restuarants"
             )
+
+
     submitted = st.form_submit_button("Run Program")
+
     if submitted:
 
         # Google 'Nearby Search' documentation: https://developers.google.com/maps/documentation/places/web-service/search-nearby?hl=en_US#maps_http_places_nearbysearch-py
@@ -89,6 +92,7 @@ with st.form("form_variables"):
             my_bar.progress(percent_complete + 1)
 
         #The API uses meters, so we need to convert miles to meters
+        @st.cache(persist=True)
         def miles_to_meters(miles):
             try:
                 return miles * 1_609.344
@@ -140,12 +144,17 @@ with st.form("form_variables"):
         df = pd.DataFrame(business_list)
 
         # Function to extract latitude and longitude
+        @st.cache(persist=True)
         def coord(dictionary):
             for key, value in dictionary.items():
                 return value['lat'],value['lng']
 
         # Apply the function created previously 'coord' to the 'geometry' column to extract nested IF statement
         df['coord'] = df['geometry'].apply(coord)
+
+        # Create latitude (lat) and longitude (lon) data from 'coord' column
+        df['lat'] = df['coord'].apply(lambda x: x[0])
+        df['lon'] = df['coord'].apply(lambda x: x[1])
 
         # Calculate distance of fast food restaurant from origin location
         df['distance_origin'] = df['coord'].apply(lambda x: haversine(origin,x, unit = 'mi'))
@@ -197,6 +206,8 @@ with st.form("form_variables"):
         df = df.drop(['more_opening_hours'], axis=1)
 
 
+        # SPLIT COORDINATES INTO LAT AND LON
+
         # Rename columns
         df.rename(columns = {
         "name":"Name",
@@ -209,19 +220,27 @@ with st.form("form_variables"):
         "address":"Address"
         }, inplace = True )
 
-       # df = df[["Name", "Address", "Coordinates", "Distance from Origin", "Price (0-5)", "Rating (0-5)", "Total Ratings", "Closed"]]
 
-        st.write(df)
+        df = df[["Name", "Address", "Distance from Origin", "Price (0-5)", "Rating (0-5)", "Total Ratings", "Coordinates", "lat", "lon"]]
 
-        # Prep to download data as .csv
-        # today = datetime.now()
-        # fileext = today.strftime('%m_%d_%Y') + '_' + search_string + '_from_' + str(rad) + '.csv'
-        # fileext = fileext.replace(" ", "_")
-        # filecsv = fileext.replace("\\","/")
 
-        # Measure how long it takes program to run - End Time
-        end_time = time.time()
-        print("The time it took to run the program::", round(end_time-start_time, 1), "seconds")
+
+        with st.container():
+            st.dataframe(
+                data = df,
+                #use_container_width = True
+                )
+
+            # Measure how long it takes program to run - End Time
+            end_time = time.time()
+            st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
+
+
+            st.map(
+                data = df,
+            )
+
+
 
 
 
