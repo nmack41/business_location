@@ -82,7 +82,7 @@ with st.form("form_variables"):
         # Foundation of this code is from https://learndataanalysis.org/source-code-search-nearby-businesses-with-google-maps-api-and-python/
 
         # Measure how long it takes program to run - Start Time
-        start_time = time.time()
+        start_time = time.perf_counter()
 
         # Loading icon
         my_bar = st.progress(0)
@@ -203,7 +203,7 @@ with st.form("form_variables"):
 
         # Drop for now. Will add as a feature later
         #df = df.drop(['open'], axis=1)
-        df = df.drop(['more_opening_hours'], axis=1)
+        #df = df.drop(['more_opening_hours'], axis=1)
 
 
         # SPLIT COORDINATES INTO LAT AND LON
@@ -232,7 +232,7 @@ with st.form("form_variables"):
                 )
 
             # Measure how long it takes program to run - End Time
-            end_time = time.time()
+            end_time = time.perf_counter()
             st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
 
 
