@@ -3,12 +3,11 @@
 
 # Import libraries
 #import json
-#import requests
+import requests
 import time
 import googlemaps
 import pandas as pd
-#import os
-#import re
+
 from datetime import datetime
 #import matplotlib.pyplot as plt
 #import seaborn as sns
@@ -120,6 +119,17 @@ with st.form("form_variables"):
             radius=distance,
         )
 
+        # response_details = map_client.place(
+        #     location=(lat, lng),
+        #     keyword=search_string,
+        #     radius=distance,
+        # )
+        # places_list = []
+        # st.write(response_details)
+
+        #places_list.extend(response_details.get('results'))
+
+
         # Add results from Places_Nearby API into the empty list we creaetd, business_list
         business_list.extend(response.get('results'))
 
@@ -159,41 +169,7 @@ with st.form("form_variables"):
         # Calculate distance of fast food restaurant from origin location
         df['distance_origin'] = df['coord'].apply(lambda x: haversine(origin,x, unit = 'mi'))
 
-        # Calculate distance of fast food restaurant from origin location
-        #df['distance_origin'] = df['coord'].apply(lambda x: haversine(origin,x, unit = 'mi'))
 
-        #def chunker(seq, size):
-            #return (seq[pos:pos + size] for pos in range(0, len(seq), size))
-
-        #for location in chunker(df['coord'],25):
-            #print(location)
-
-        # While there is no maximum number of elements per day (EPD), the following usage limits are in place for the Distance Matrix API:
-
-        # Maximum of 25 origins or 25 destinations per request.
-        # Maximum 100 elements per server-side request.
-        # Maximum 100 elements per client-side request.
-        # 1000 elements per second (EPS), calculated as the sum of client-side and server-side queries.
-
-        #dist_matrix = map_client.distance_matrix(
-            #destinations = df['coord'],
-            #origins = origin,
-        #)
-
-        # Let's add those types of 'fast food' and make them columns in our dataframe
-        # df = df.join(pd.DataFrame(columns=['restaurant', 'food', 'point_of_interest', 'establishment', 'cafe', 'store', 'meal_takeaway']))
-
-        # We'll make it '1' if they are that type and '0' if they are not that type
-        # df['restaurant'] = df['types'].apply(lambda x: 1 if 'restaurant' in x else 0)
-        # df['food'] = df['types'].apply(lambda x: 1 if 'food' in x else 0)
-        # df['point_of_interest'] = df['types'].apply(lambda x: 1 if 'point_of_interest' in x else 0)
-        # df['establishment'] = df['types'].apply(lambda x: 1 if 'establishment' in x else 0)
-        # df['cafe'] = df['types'].apply(lambda x: 1 if 'cafe' in x else 0)
-        # df['store'] = df['types'].apply(lambda x: 1 if 'store' in x else 0)
-        # df['meal_takeaway'] = df['types'].apply(lambda x: 1 if 'meal_takeaway' in x else 0)
-
-        # Icon background color, icon mask base, photos, place id, plus code, reference, scope, and types are not relevant; will drop.
-        # Will keep name
 
         df = df.drop(['business_status', 'geometry', 'icon', 'icon_background_color', 'icon_mask_base_uri', 'photos', 'place_id', 'plus_code','reference', 'scope', 'types'], axis=1)
 
@@ -209,36 +185,47 @@ with st.form("form_variables"):
         # SPLIT COORDINATES INTO LAT AND LON
 
         # Rename columns
-        df.rename(columns = {
-        "name":"Name",
-        "price_level":"Price (0-5)",
-        "rating":"Rating (0-5)",
-        "user_ratings_total":"Total Ratings",
-        "permanently_closed":"Closed",
-        "coord":"Coordinates",
-        "distance_origin":"Distance from Origin",
-        "address":"Address"
-        }, inplace = True )
+        # df.rename(columns = {
+        # "name":"Name",
+        # "price_level":"Price (0-5)",
+        # "rating":"Rating (0-5)",
+        # "user_ratings_total":"Total Ratings",
+        # "permanently_closed":"Closed",
+        # "coord":"Coordinates",
+        # "distance_origin":"Distance from Origin",
+        # "address":"Address"
+        # }, inplace = True )
+
+        column_dict={
+            "name":"Name",
+            "price_level":"Price (0-5)",
+            "rating":"Rating (0-5)",
+            "user_ratings_total":"Total Ratings",
+            "permanently_closed":"Closed",
+            "coord":"Coordinates",
+            "distance_origin":"Distance from Origin",
+            "address":"Address"
+            }
+
+        df[df.columns.intersection(column_dict)]
+
+        #df = df[["Name", "Address", "Distance from Origin", "Price (0-5)", "Rating (0-5)", "Total Ratings", "Coordinates", "lat", "lon"]]
 
 
-        df = df[["Name", "Address", "Distance from Origin", "Price (0-5)", "Rating (0-5)", "Total Ratings", "Coordinates", "lat", "lon"]]
 
-
-
-        with st.container():
-            st.dataframe(
-                data = df,
-                #use_container_width = True
-                )
+        # with st.container():
+        #     st.dataframe(
+        #         data = df,
+        #         #use_container_width = True
+        #         )
 
             # Measure how long it takes program to run - End Time
-            end_time = time.perf_counter()
-            st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
+        end_time = time.perf_counter()
+        st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
 
 
-            st.map(
-                data = df,
-            )
+        st.map(data = df,)
+
 
 
 

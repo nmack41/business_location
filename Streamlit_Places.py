@@ -85,3 +85,52 @@ with st.form("form_variables"):
                 return miles * 1_609.344
             except:
                 return 0
+
+
+        query_result = google_places.nearby_search(
+            location='London, England', keyword='Fish and Chips',
+            radius=20000, types=[types.TYPE_FOOD])
+
+        if query_result.has_attributions:
+            st.write(query_result.html_attributions)
+
+        for place in query_result.places:
+            # Returned places from a query are place summaries.
+
+            st.write(place.name)
+            st.write(place.geo_location)
+            st.write( place.place_id)
+
+            # The following method has to make a further API call.
+            place.get_details()
+            # Referencing any of the attributes below, prior to making a call to
+            # get_details() will raise a googleplaces.GooglePlacesAttributeError.
+
+            st.write(place.details)  # A dict matching the JSON response from Google.
+            st.write(place.local_phone_number)
+            st.write(place.international_phone_number)
+            st.write(place.website)
+            st.write(place.url)
+
+
+        # Are there any additional pages of results?
+        if query_result.has_next_page_token:
+            query_result_next_page = google_places.nearby_search(
+                pagetoken=query_result.next_page_token)
+
+        # Adding and deleting a place
+        try:
+            added_place = google_places.add_place(name='Mom and Pop local store',
+                                                  lat_lng={'lat': 51.501984, 'lng': -0.141792},
+                                                  accuracy=100,
+                                                  types=types.TYPE_HOME_GOODS_STORE,
+                                                  language=lang.ENGLISH_GREAT_BRITAIN)
+
+            st.write(added_place.place_id)  # The Google Places identifier - Important!
+            st.write(added_place.id)
+
+            # Delete the place that you've just added.
+            google_places.delete_place(added_place.place_id)
+        except GooglePlacesError as error_detail:
+            # You've passed in parameter values that the Places API doesn't like..
+            st.write(error_detail)
