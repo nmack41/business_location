@@ -277,10 +277,6 @@ with st.form("form_variables"):
         # Reset index so it goes from 0 to n
         df = df.reset_index(drop=True)
 
-        # Drop unnecessary columns
-        #df = df.drop(['place_id'], axis=1)
-        #df = df[['name', 'rating', 'user_ratings_total', 'lat', 'lon', 'distance_origin', 'address', 'website', 'phone', 'emails']]
-
         column_dict={
             "name":"Name",
             "price_level":"Price (0-5)",
@@ -304,7 +300,11 @@ with st.form("form_variables"):
             else:
                 pass
 
+
         st.map(data=df)
+
+        # Drop unnecessary columns
+        df = df.drop(['place_id', 'Coordinates', 'address_y'], axis=1)
 
         st.table(
                 data = df,
