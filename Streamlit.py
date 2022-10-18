@@ -306,7 +306,7 @@ with st.form("form_variables"):
 
         st.map(data=df)
 
-        st.dataframe(
+        st.table(
                 data = df,
                 #use_container_width = True
                 )
