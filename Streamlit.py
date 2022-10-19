@@ -306,6 +306,20 @@ with st.form("form_variables"):
                 pass
 
 
+
+
+
+        # Download data as CSV
+        csv = df.to_csv(index=False)
+
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name='large_df.csv',
+            mime='text/csv',
+        )
+
+
         st.map(data=df)
 
         # Drop unnecessary columns
