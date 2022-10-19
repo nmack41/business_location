@@ -315,7 +315,7 @@ if submitted:
 
     # Download data as CSV
     current_time = datetime.datetime.now()
-    dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
+    dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year) + ".csv"
     #dl_name = search_string + "_" + str(rad) + "mi"
 
     @st.cache
