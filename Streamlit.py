@@ -313,47 +313,35 @@ with st.form("form_variables"):
 
 
 
-# Download data as CSV
-current_time = datetime.datetime.now()
-dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
-#dl_name = search_string + "_" + str(rad) + "mi"
+        # Download data as CSV
+        current_time = datetime.datetime.now()
+        dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
+        #dl_name = search_string + "_" + str(rad) + "mi"
 
-@st.cache
-def convert_df(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
-    return df.to_csv().encode('utf-8')
+        @st.cache
+        def convert_df(df):
+            # IMPORTANT: Cache the conversion to prevent computation on every rerun
+            return df.to_csv().encode('utf-8')
 
-csv = convert_df(df)
+        csv = convert_df(df)
 
-st.download_button(
-    label="Download data as CSV",
-    data=csv,
-    file_name=dl_name,
-    mime='text/csv',
-)
-
-
-st.map(data=df)
-
-
-
-st.table(
-        data = df,
-        #use_container_width = True
+        st.download_button(
+            label="Download data as CSV",
+            data=csv,
+            file_name=dl_name,
+            mime='text/csv',
         )
 
+
+        st.map(data=df)
+
+
+
+        st.table(
+                data = df,
+                #use_container_width = True
+                )
+
         # Measure how long it takes program to run - End Time
-end_time = time.perf_counter()
-st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
-
-
-
-
-
-
-
-
-
-        # Download data as .csv
-        #df.to_csv(filecsv)
-        #files.download(filecsv)
+        end_time = time.perf_counter()
+        st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
