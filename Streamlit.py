@@ -315,8 +315,8 @@ with st.form("form_variables"):
 
 # Download data as CSV
 current_time = datetime.datetime.now()
-dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
-
+#dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
+dl_name = search_string + "_" + str(rad) + "mi"
 csv = df.to_csv(dl_name, index=False)
 
 st.download_button(
