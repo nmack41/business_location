@@ -270,12 +270,14 @@ with st.form("form_variables"):
 
 
         # CLEANING
-
         # Drop duplicate values
         df = df.drop_duplicates(subset = ['place_id'])
 
         # Reset index so it goes from 0 to n
         df = df.reset_index(drop=True)
+
+        # Change set to list for emails
+        df = df['emails'].apply(list())
 
         column_dict={
             "name":"Name",
