@@ -274,6 +274,9 @@ with st.form("form_variables"):
         # Drop duplicate values
         df = df.drop_duplicates(subset = ['place_id'])
 
+        # Drop unnecessary columns
+        df = df.drop(['place_id', 'Coordinates', 'address_y'], axis=1, errors='ignore')
+
         # Reset index so it goes from 0 to n
         df = df.reset_index(drop=True)
 
@@ -310,33 +313,32 @@ with st.form("form_variables"):
 
 
 
-        # Download data as CSV
-        current_time = datetime.datetime.now()
-        dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
+# Download data as CSV
+current_time = datetime.datetime.now()
+dl_name = search_string + "_" + str(rad) + "mi__" + str(current_time.month) + "_" + str(current_time.day) + "_" + str(current_time.year)
 
-        csv = df.to_csv(dl_name, index=False)
+csv = df.to_csv(dl_name, index=False)
 
-        st.download_button(
-            label="Download data as CSV",
-            data=csv,
-            file_name=dl_name,
-            mime='text/csv',
+st.download_button(
+    label="Download data as CSV",
+    data=csv,
+    file_name=dl_name,
+    mime='text/csv',
+)
+
+
+st.map(data=df)
+
+
+
+st.table(
+        data = df,
+        #use_container_width = True
         )
 
-
-        st.map(data=df)
-
-        # Drop unnecessary columns
-        df = df.drop(['place_id', 'Coordinates', 'address_y'], axis=1, errors='ignore')
-
-        st.table(
-                data = df,
-                #use_container_width = True
-                )
-
-                # Measure how long it takes program to run - End Time
-        end_time = time.perf_counter()
-        st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
+        # Measure how long it takes program to run - End Time
+end_time = time.perf_counter()
+st.write("Loaded in:", round(end_time - start_time, 1), "seconds.")
 
 
 
