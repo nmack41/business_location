@@ -277,10 +277,10 @@ with st.form("form_variables"):
         df = df.reset_index(drop=True)
 
         # Change set to list for emails
-        def convert(set):
-            return list(set)
-
-        df['emails'] = df['emails'].apply(convert)
+        # def convert(set):
+        #     return list(set)
+        #
+        # df['emails'] = df['emails'].apply(convert)
 
         column_dict={
             "name":"Name",
