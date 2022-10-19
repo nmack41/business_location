@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+import datetime
 
 # Import libraries
 import requests
@@ -8,7 +9,7 @@ import googlemaps
 import pandas as pd
 from pandas.io.formats.format import NA
 
-from datetime import datetime
+from datetime import date
 from haversine import haversine, Unit
 import streamlit as st
 
@@ -310,12 +311,15 @@ with st.form("form_variables"):
 
 
         # Download data as CSV
-        csv = df.to_csv(index=False)
+        current_time = datetime.datetime.now()
+        dl_name = search_string + "_" + rad + current_time.month + "_" + current_time.day + "_" + current_time.year
+
+        csv = df.to_csv(dl_name, index=False)
 
         st.download_button(
             label="Download data as CSV",
             data=csv,
-            file_name='large_df.csv',
+            file_name=dl_name,
             mime='text/csv',
         )
 
