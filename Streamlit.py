@@ -309,7 +309,7 @@ with st.form("form_variables"):
 
 
 
-        Download data as CSV
+        # Download data as CSV
         csv = df.to_csv(index=False)
 
         st.download_button(
