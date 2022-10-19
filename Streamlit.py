@@ -323,7 +323,7 @@ with st.form("form_variables"):
         st.map(data=df)
 
         # Drop unnecessary columns
-        df = df.drop(['place_id', 'Coordinates', 'address_y'], axis=1)
+        df = df.drop(['place_id', 'Coordinates', 'address_y'], axis=1, errors='ignore')
 
         st.table(
                 data = df,
